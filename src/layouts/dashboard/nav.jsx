@@ -16,7 +16,7 @@ import { RouterLink } from '../../routes/components/index';
 import { useResponsive } from '../../hooks/use-responsive';
 
 import { account } from '../../_mock/account';
-
+import { GiBlackBook } from "react-icons/gi";
 import Logo from '../../components/logo/logo';
 import Scrollbar from '../../components/scrollbar/scrollbar';
 
@@ -70,17 +70,7 @@ export default function Nav({ openNav, onCloseNav }) {
     </Stack>
   );
 
-  const renderUpgrade = (
-    <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-      <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
-        <Box
-          component="img"
-          src="/assets/illustrations/illustration_avatar.png"
-          sx={{ width: 100, position: 'absolute', top: -50 }}
-        />
-      </Stack>
-    </Box>
-  );
+
 
   const renderContent = (
     <Scrollbar
@@ -93,7 +83,13 @@ export default function Nav({ openNav, onCloseNav }) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4 }} />
+      <div className='flex flex-col gap-2 justify-center items-center align-middle mt-20'>
+        <GiBlackBook size={40}  />
+        <Typography variant="h4" sx={{ mb: 5 }}>
+       EDtech
+      </Typography>
+        </div>
+       
 
       {renderAccount}
 

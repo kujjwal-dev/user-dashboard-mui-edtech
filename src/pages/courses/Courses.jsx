@@ -1,8 +1,16 @@
 import React from 'react'
+import CoursesView from './CoursesView'
+import { Helmet } from 'react-helmet-async';
+
 
 const Courses = () => {
   return (
-    <div>Courses</div>
+   <>
+    <Helmet>
+      <title> Courses | ED Tech </title>
+    </Helmet>
+    <CoursesView/>
+   </>
   )
 }
 
