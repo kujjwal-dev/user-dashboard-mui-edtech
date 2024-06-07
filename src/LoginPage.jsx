@@ -29,41 +29,39 @@ const LoginPage = () => {
                withCredentials: true,
             }
         );
+        console.log(emailSend);
+        toast.success(emailSend.data.message);
+        setShowOTP(true);
         
             
 
         } catch (error) {
-           
+            console.log(error);
+            toast.error(error.response.data.message);
         } finally {
-           
+            setLoading(false);
         }
     }
 
     async function verifyOTP() {
         try {
-            
-               
-      
-
+            const otpSend = await Axios.post("http://localhost:3001/api/v1/auth/verify",{
+                otp,
+                email
+        },{
+            withCredentials: true,
+        }
+            );
+            console.log(otpSend);
+            setUser(otpSend.data);
         } catch (error) {
-            
-
+            console.log(error);
         } finally {
-           
+           setLoading(false);
         }
     }
 
     console.log('user', user);
-
-    async function me() {
-        try {
-         
-        } catch (error) {
-           
-        }
-    }
-
-
 
     return (
         <div>
@@ -93,8 +91,9 @@ const LoginPage = () => {
                                                     autofocus
                                                     className="opt-container"
                                                 />
-                                                <button className="bg-[#002D74] rounded-xl text-white py-2 hover:scale-105 duration-300 flex gap-1 items-center justify-center "
-                                                onClick={() => { 
+                                                <button className="bg-[#002D74] rounded-xl text-white py-2 hover:scale-105 duration-300 flex gap-1 items-center justify-center " type='button'
+                                                onClick={(e) => { 
+                                                    e.preventDefault();
                                                     verifyOTP();
                                                     setLoading(true);
                                                 }}>
@@ -121,7 +120,9 @@ const LoginPage = () => {
                                                 <form action="" className="flex flex-col gap-4">
                                                     <input className="p-2 mt-8 rounded-xl border" type="email" name="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
                                                     <button className="bg-[#002D74] rounded-xl text-white py-2 hover:scale-105 duration-300 flex gap-1 items-center justify-center"
-                                                        onClick={() => {
+                                                    type='button'
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
                                                             sendEmail();
                                                             setLoading(true);
                                                         }}
