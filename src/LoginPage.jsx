@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import Axios from 'axios'
 import OtpInput from "react-otp-input";
 import { CgSpinner } from "react-icons/cg";
 import toast, { Toaster } from "react-hot-toast";
@@ -22,6 +22,14 @@ const LoginPage = () => {
 
     async function sendEmail() {
         try {
+            const emailSend = await Axios.post("http://localhost:3001/api/v1/auth/register",
+            {
+                email,
+            },{
+               withCredentials: true,
+            }
+        );
+        
             
 
         } catch (error) {

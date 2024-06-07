@@ -1,52 +1,80 @@
-import { Box, Button, TextField, Typography} from '@mui/material';
+import { Box, Button, Snackbar, TextField, Typography, Alert } from '@mui/material';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { useEffect, useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const initialValues = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  contact: '',
-  address1: '',
-  address2: '',
+  father_name: '',
+  mother_name: '',
+  father_email_address: '',
+  mother_email_address: '',
+  father_phone_number: '',
+  mother_phone_number: '',
+  address: '',
+  city: '',
 };
 
 const phoneRegExp =
   /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
 const userSchema = yup.object().shape({
-  firstName: yup.string().required('required'),
-  lastName: yup.string().required('required'),
-  email: yup.string().email('Invalid email').required('required'),
-  contact: yup
+  father_name: yup.string().required('Required'),
+  mother_name: yup.string().required('Required'),
+  father_email_address: yup
+    .string()
+    .email('Invalid email')
+    .required('Required'),
+  mother_email_address: yup
+    .string()
+    .email('Invalid email')
+    .required('Required'),
+  father_phone_number: yup
     .string()
     .matches(phoneRegExp, 'Phone number is not valid.')
-    .required('required'),
-  address1: yup.string().required('required'),
-  address2: yup.string().required('required'),
+    .required('Required'),
+  mother_phone_number: yup
+    .string()
+    .matches(phoneRegExp, 'Phone number is not valid.')
+    .required('Required'),
+  address: yup.string().required('Required'),
+  city: yup.string().required('Required'),
 });
 
 const ProfileView = () => {
   const isNonMobile = useMediaQuery('(min-width:600px)');
+  const [savedValues, setSavedValues] = useState(initialValues);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  useEffect(() => {
+    const savedValuesString = localStorage.getItem('profileValues');
+    if (savedValuesString) {
+      setSavedValues(JSON.parse(savedValuesString));
+    }
+  }, []);
 
   const formSubmitHandler = (values) => {
-    console.log(values);
+    setSavedValues(values);
+    localStorage.setItem('profileValues', JSON.stringify(values))
+    setOpenSnackbar(true);
+    console.log('Saved values:', values);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
     <Box m="15px">
-      
       <Typography variant="h4" sx={{ mb: 5 }}>
-       Profile 
+        Profile
       </Typography>
 
- 
-
       <Formik
-        onSubmit={formSubmitHandler}
-        initialValues={initialValues}
+        initialValues={savedValues}
         validationSchema={userSchema}
+        onSubmit={formSubmitHandler}
+        enableReinitialize
       >
         {({
           values,
@@ -69,85 +97,110 @@ const ProfileView = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="First Name"
+                label="Father Name"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.firstName}
-                name="firstName"
-                error={!!touched.firstName && !!errors.firstName}
-                helperText={touched.firstName && errors.firstName}
+                value={values.father_name}
+                name="father_name"
+                error={!!touched.father_name && !!errors.father_name}
+                helperText={touched.father_name && errors.father_name}
                 sx={{ gridColumn: 'span 2' }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Last Name"
+                label="Mother Name"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.lastName}
-                name="lastName"
-                error={!!touched.lastName && !!errors.lastName}
-                helperText={touched.lastName && errors.lastName}
+                value={values.mother_name}
+                name="mother_name"
+                error={!!touched.mother_name && !!errors.mother_name}
+                helperText={touched.mother_name && errors.mother_name}
                 sx={{ gridColumn: 'span 2' }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Email"
+                label="Father Email Address"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.email}
-                name="email"
-                error={!!touched.email && !!errors.email}
-                helperText={touched.email && errors.email}
+                value={values.father_email_address}
+                name="father_email_address"
+                error={!!touched.father_email_address && !!errors.father_email_address}
+                helperText={touched.father_email_address && errors.father_email_address}
+                sx={{ gridColumn: 'span 2' }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Mother Email Address"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.mother_email_address}
+                name="mother_email_address"
+                error={!!touched.mother_email_address && !!errors.mother_email_address}
+                helperText={touched.mother_email_address && errors.mother_email_address}
+                sx={{ gridColumn: 'span 2' }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Father Phone Number"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.father_phone_number}
+                name="father_phone_number"
+                error={!!touched.father_phone_number && !!errors.father_phone_number}
+                helperText={touched.father_phone_number && errors.father_phone_number}
+                sx={{ gridColumn: 'span 2' }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Mother Phone Number"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.mother_phone_number}
+                name="mother_phone_number"
+                error={!!touched.mother_phone_number && !!errors.mother_phone_number}
+                helperText={touched.mother_phone_number && errors.mother_phone_number}
+                sx={{ gridColumn: 'span 2' }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Address"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.address}
+                name="address"
+                error={!!touched.address && !!errors.address}
+                helperText={touched.address && errors.address}
                 sx={{ gridColumn: 'span 4' }}
               />
               <TextField
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Contact Number"
+                label="City"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.contact}
-                name="contact"
-                error={!!touched.contact && !!errors.contact}
-                helperText={touched.contact && errors.contact}
-                sx={{ gridColumn: 'span 4' }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Address 1"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.address1}
-                name="address1"
-                error={!!touched.address1 && !!errors.address1}
-                helperText={touched.address1 && errors.address1}
-                sx={{ gridColumn: 'span 4' }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Address 2"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.address2}
-                name="address2"
-                error={!!touched.address2 && !!errors.address2}
-                helperText={touched.address2 && errors.address2}
-                sx={{ gridColumn: 'span 4' }}
+                value={values.city}
+                name="city"
+                error={!!touched.city && !!errors.city}
+                helperText={touched.city && errors.city}
+                sx={{ gridColumn: 'span 2' }}
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="15px">
               <Button
                 type="submit"
-                // onClick={(e) => e.preventDefault()}
                 color="secondary"
                 variant="contained"
               >
@@ -157,6 +210,17 @@ const ProfileView = () => {
           </form>
         )}
       </Formik>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          Profile updated successfully!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
