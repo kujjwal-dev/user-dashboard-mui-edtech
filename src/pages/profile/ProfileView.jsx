@@ -1,63 +1,73 @@
 import { Box, Button, Snackbar, TextField, Typography, Alert } from '@mui/material';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import axios from 'axios';
 
 const initialValues = {
-  father_name: '',
-  mother_name: '',
-  father_email_address: '',
-  mother_email_address: '',
+  fathername: '',
+  mothername: '',
   father_phone_number: '',
   mother_phone_number: '',
+  father_email: '',
+  mother_email: '',
   address: '',
   city: '',
 };
 
-const phoneRegExp =
-  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
 const userSchema = yup.object().shape({
-  father_name: yup.string().required('Required'),
-  mother_name: yup.string().required('Required'),
-  father_email_address: yup
-    .string()
-    .email('Invalid email')
-    .required('Required'),
-  mother_email_address: yup
-    .string()
-    .email('Invalid email')
-    .required('Required'),
-  father_phone_number: yup
-    .string()
-    .matches(phoneRegExp, 'Phone number is not valid.')
-    .required('Required'),
-  mother_phone_number: yup
-    .string()
-    .matches(phoneRegExp, 'Phone number is not valid.')
-    .required('Required'),
-  address: yup.string().required('Required'),
-  city: yup.string().required('Required'),
+  fathername: yup.string().required('Father Name is required'),
+  mothername: yup.string().required('Mother Name is required'),
+  father_phone_number: yup.string().matches(phoneRegExp, 'Phone number is not valid').required('Father Phone Number is required'),
+  mother_phone_number: yup.string().matches(phoneRegExp, 'Phone number is not valid').required('Mother Phone Number is required'),
+  father_email: yup.string().email('Invalid email').required('Father Email is required'),
+  mother_email: yup.string().email('Invalid email').required('Mother Email is required'),
+  address: yup.string().required('Address is required'),
+  city: yup.string().required('City is required'),
 });
 
 const ProfileView = () => {
   const isNonMobile = useMediaQuery('(min-width:600px)');
-  const [savedValues, setSavedValues] = useState(initialValues);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [savedValues, setSavedValues] = useState(initialValues);
 
-  useEffect(() => {
-    const savedValuesString = localStorage.getItem('profileValues');
-    if (savedValuesString) {
-      setSavedValues(JSON.parse(savedValuesString));
+  const formSubmitHandler = async (values) => {
+    try {
+      console.log('Submitting values:', values);
+      const response = await axios.post('http://localhost:3001/api/v1/profile/create_profile', {
+        fathername: values.fathername,
+        mothername: values.mothername,
+        father_phone_number: values.father_phone_number,
+        mother_phone_number: values.mother_phone_number,
+        father_email: values.father_email,
+        mother_email: values.mother_email,
+        address: values.address,
+        city: values.city,
+      },{
+        withCredentials:true,
+      });
+      console.log('Backend response:', response);
+
+      if (response.status === 201) {
+        setSavedValues(values);
+        setSnackbarMessage('Profile updated successfully!');
+        setSnackbarSeverity('success');
+      } else {
+        setSnackbarMessage('Error updating profile.');
+        setSnackbarSeverity('error');
+      }
+      setOpenSnackbar(true);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSnackbarMessage('Error submitting form: ' + (error.response?.data?.message || error.message));
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
     }
-  }, []);
-
-  const formSubmitHandler = (values) => {
-    setSavedValues(values);
-    localStorage.setItem('profileValues', JSON.stringify(values))
-    setOpenSnackbar(true);
-    console.log('Saved values:', values);
   };
 
   const handleCloseSnackbar = () => {
@@ -100,10 +110,10 @@ const ProfileView = () => {
                 label="Father Name"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.father_name}
-                name="father_name"
-                error={!!touched.father_name && !!errors.father_name}
-                helperText={touched.father_name && errors.father_name}
+                value={values.fathername}
+                name="fathername"
+                error={!!touched.fathername && !!errors.fathername}
+                helperText={touched.fathername && errors.fathername}
                 sx={{ gridColumn: 'span 2' }}
               />
               <TextField
@@ -113,36 +123,10 @@ const ProfileView = () => {
                 label="Mother Name"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.mother_name}
-                name="mother_name"
-                error={!!touched.mother_name && !!errors.mother_name}
-                helperText={touched.mother_name && errors.mother_name}
-                sx={{ gridColumn: 'span 2' }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Father Email Address"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.father_email_address}
-                name="father_email_address"
-                error={!!touched.father_email_address && !!errors.father_email_address}
-                helperText={touched.father_email_address && errors.father_email_address}
-                sx={{ gridColumn: 'span 2' }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Mother Email Address"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.mother_email_address}
-                name="mother_email_address"
-                error={!!touched.mother_email_address && !!errors.mother_email_address}
-                helperText={touched.mother_email_address && errors.mother_email_address}
+                value={values.mothername}
+                name="mothername"
+                error={!!touched.mothername && !!errors.mothername}
+                helperText={touched.mothername && errors.mothername}
                 sx={{ gridColumn: 'span 2' }}
               />
               <TextField
@@ -175,6 +159,32 @@ const ProfileView = () => {
                 fullWidth
                 variant="filled"
                 type="text"
+                label="Father Email"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.father_email}
+                name="father_email"
+                error={!!touched.father_email && !!errors.father_email}
+                helperText={touched.father_email && errors.father_email}
+                sx={{ gridColumn: 'span 2' }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Mother Email"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.mother_email}
+                name="mother_email"
+                error={!!touched.mother_email && !!errors.mother_email}
+                helperText={touched.mother_email && errors.mother_email}
+                sx={{ gridColumn: 'span 2' }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
                 label="Address"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -199,11 +209,7 @@ const ProfileView = () => {
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="15px">
-              <Button
-                type="submit"
-                color="secondary"
-                variant="contained"
-              >
+              <Button type="submit" color="secondary" variant="contained">
                 Update Profile
               </Button>
             </Box>
@@ -217,8 +223,8 @@ const ProfileView = () => {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
-          Profile updated successfully!
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </Box>
