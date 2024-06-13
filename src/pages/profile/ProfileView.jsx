@@ -1,20 +1,11 @@
-import { Box, Button, Snackbar, TextField, Typography, Alert } from '@mui/material';
+import { Box, Button, Snackbar, TextField, Typography, Alert, Container } from '@mui/material';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
 
-const initialValues = {
-  fathername: '',
-  mothername: '',
-  father_phone_number: '',
-  mother_phone_number: '',
-  father_email: '',
-  mother_email: '',
-  address: '',
-  city: '',
-};
+
 
 const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
@@ -34,12 +25,26 @@ const ProfileView = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-  const [savedValues, setSavedValues] = useState(initialValues);
+  const [userData,  setUserData] = useState(null);
+  const [loading, setLoading ] = useState(false);
+  console.log("userData", userData)
+
+  const initialValues = {
+    fathername: userData?.fathername || '',
+    mothername: userData?.mothername ||  '',
+    father_phone_number: userData?.father_phone_number || '',
+    mother_phone_number: userData?.mother_phone_number || '',
+    father_email: userData?.father_email || '',
+    mother_email: userData?.mother_email || '',
+    address: userData?.address || '',
+    city: userData?.city || '',
+  };
 
   const formSubmitHandler = async (values) => {
     try {
+      setLoading(true)
       console.log('Submitting values:', values);
-      const response = await axios.post('http://localhost:3001/api/v1/profile/create_profile', {
+      const response = await axios.put('http://localhost:3001/api/v1/profile/update_profile', {
         fathername: values.fathername,
         mothername: values.mothername,
         father_phone_number: values.father_phone_number,
@@ -53,8 +58,7 @@ const ProfileView = () => {
       });
       console.log('Backend response:', response);
 
-      if (response.status === 201) {
-        setSavedValues(values);
+      if (response?.data?.success) {
         setSnackbarMessage('Profile updated successfully!');
         setSnackbarSeverity('success');
       } else {
@@ -68,20 +72,35 @@ const ProfileView = () => {
       setSnackbarSeverity('error');
       setOpenSnackbar(true);
     }
+    finally {
+      setLoading(false)
+
+    }
   };
+  async function getUser() {
+      const response = await axios.get(`http://localhost:3001/api/v1/profile/get_profile`,{
+        withCredentials:true,
+      })
+      setUserData(response?.data?.data)
+  }
+
+  useEffect(() => {
+    getUser();
+  }, [])
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
   };
 
   return (
+    <Container maxWidth="md">
     <Box m="15px">
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Profile
+        Edit Profile
       </Typography>
 
       <Formik
-        initialValues={savedValues}
+        initialValues={initialValues}
         validationSchema={userSchema}
         onSubmit={formSubmitHandler}
         enableReinitialize
@@ -104,8 +123,8 @@ const ProfileView = () => {
               }}
             >
               <TextField
-                fullWidth
-                variant="filled"
+                size='medium'
+                variant="outlined"
                 type="text"
                 label="Father Name"
                 onBlur={handleBlur}
@@ -114,11 +133,11 @@ const ProfileView = () => {
                 name="fathername"
                 error={!!touched.fathername && !!errors.fathername}
                 helperText={touched.fathername && errors.fathername}
-                sx={{ gridColumn: 'span 2' }}
+                sx={{ gridColumn: 'span 2'}}
               />
               <TextField
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 type="text"
                 label="Mother Name"
                 onBlur={handleBlur}
@@ -131,7 +150,7 @@ const ProfileView = () => {
               />
               <TextField
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 type="text"
                 label="Father Phone Number"
                 onBlur={handleBlur}
@@ -144,7 +163,7 @@ const ProfileView = () => {
               />
               <TextField
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 type="text"
                 label="Mother Phone Number"
                 onBlur={handleBlur}
@@ -157,7 +176,7 @@ const ProfileView = () => {
               />
               <TextField
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 type="text"
                 label="Father Email"
                 onBlur={handleBlur}
@@ -170,7 +189,7 @@ const ProfileView = () => {
               />
               <TextField
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 type="text"
                 label="Mother Email"
                 onBlur={handleBlur}
@@ -183,7 +202,7 @@ const ProfileView = () => {
               />
               <TextField
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 type="text"
                 label="Address"
                 onBlur={handleBlur}
@@ -196,7 +215,7 @@ const ProfileView = () => {
               />
               <TextField
                 fullWidth
-                variant="filled"
+                variant="outlined"
                 type="text"
                 label="City"
                 onBlur={handleBlur}
@@ -209,8 +228,8 @@ const ProfileView = () => {
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="15px">
-              <Button type="submit" color="secondary" variant="contained">
-                Update Profile
+              <Button type="submit" color="secondary" disabled={loading? true: false} variant="contained">
+               {loading? "loading ...": " Update Profile"}
               </Button>
             </Box>
           </form>
@@ -228,6 +247,7 @@ const ProfileView = () => {
         </Alert>
       </Snackbar>
     </Box>
+    </Container>
   );
 };
 

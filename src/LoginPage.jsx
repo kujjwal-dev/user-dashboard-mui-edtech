@@ -15,6 +15,7 @@ const LoginPage = () => {
     const [showOTP, setShowOTP] = useState(false);
     const [user, setUser] = useState(null);
     const [email, setEmail] = useState("");
+    const [userCheck, setUserCheck] = useState(null);
 
 
     console.log("email", email);
@@ -61,19 +62,35 @@ const LoginPage = () => {
         }
     }
 
-    console.log('user', user);
+    async function me() {
+        try {
+      const response = await Axios.get('http://localhost:3001/api/v1/auth/me', {
+        withCredentials: true,
+      })
+      console.log("response", response)
+      setUserCheck(response?.data?.success)
+        }catch(error) {
+    
+        }
+      }
+    
+      useEffect(() => {
+    
+        me()
+      },[])
+
 
     return (
         <div>
             <Toaster toastOptions={{ duration: 4000 }} />
             {
-                user ? (<div> <App/>   </div>)
+                userCheck ? (<div> <App/>   </div>)
 
                     : (
                         <div>
                             {showOTP ? <>
                                 <section className="bg-gray-50 min-h-screen flex items-center justify-center">
-            <div className="bg-white flex flex-col md:flex-row rounded-2xl shadow-lg max-w-3xl p-5 md:p-0 items-center">
+            <div className="bg-white flex flex-col md:flex-row rounded-2xl shadow-lg max-w-6xl p-5 md:p-0 items-center">
                 <div className="md:w-1/2 px-8 md:px-16 py-8 md:py-16 flex flex-col justify-center items-center">
                     <h2 className="font-bold text-4xl md:text-6xl text-[#002D74]">EDTech</h2>
                     <p className="text-sm mt-4 text-[#002D74]">Enter Your OTP</p>
@@ -111,15 +128,15 @@ const LoginPage = () => {
         </section>
                             </>
                                 : <>
-                                   <section className="bg-gray-50 min-h-screen flex items-center justify-center">
-            <div className="bg-white flex flex-col md:flex-row rounded-2xl shadow-lg max-w-3xl w-full items-center">
+                                   <section className="bg-gray-50 min-h-screen  flex items-center justify-center">
+            <div className="bg-white flex flex-col md:flex-row rounded-2xl shadow-lg max-w-6xl w-full items-center">
                 <div className="md:w-1/2 px-8 md:px-16 py-8 md:py-16 flex flex-col justify-center items-center ">
                     <h2 className="font-bold text-4xl md:text-6xl text-[#002D74]">EDTech</h2>
                     <p className="text-sm md:text-base mt-4 text-[#002D74]">Welcome to elearning</p>
 
-                    <form className="flex flex-col gap-4 mt-8" onSubmit={(e) => e.preventDefault()}>
+                    <form className="flex w-full flex-col gap-4 mt-8" onSubmit={(e) => e.preventDefault()}>
                         <input
-                            className="p-4 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#002D74]"
+                            className="p-4 rounded-xl w-[75%] ml-[50px]  border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#002D74]"
                             type="email"
                             name="email"
                             placeholder="Email"
@@ -127,7 +144,7 @@ const LoginPage = () => {
                             onChange={(e) => setEmail(e.target.value)}
                         />
                         <button
-                            className="bg-[#002D74] rounded-xl text-white py-3 hover:scale-105 duration-300 flex gap-2 items-center justify-center"
+                            className="bg-[#002D74] w-[25%] ml-[160px] rounded-xl text-white py-3 hover:scale-105 duration-300 flex gap-2 items-center justify-center"
                             type="button"
                             onClick={() => {
                                 sendEmail();
