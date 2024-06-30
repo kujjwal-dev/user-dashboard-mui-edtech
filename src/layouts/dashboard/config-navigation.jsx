@@ -15,12 +15,12 @@ const navConfig = [
   {
     title: 'courses',
     path: '/courses',
-    icon: icon('ic_user'),
+    icon: icon('ic_blog'),
   },
   {
-    title: 'profile',
+    title: 'user profile',
     path: '/profile',
-    icon: icon('ic_cart'),
+    icon: icon('ic_user'),
   },
   {
     title: 'settings',

@@ -159,8 +159,10 @@ const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
             slots={{
               toolbar: CustomToolbar,
             }}
-            pageSize={5}
+            pageSize={8}
+            pagination
             rowsPerPageOptions={[5, 10, 20]}
+            
             autoHeight
           />
         </Box>

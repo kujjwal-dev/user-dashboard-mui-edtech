@@ -96,7 +96,7 @@ const ProfileView = () => {
     <Container maxWidth="md">
     <Box m="15px">
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Edit Profile
+      Profile
       </Typography>
 
       <Formik
@@ -229,7 +229,7 @@ const ProfileView = () => {
             </Box>
             <Box display="flex" justifyContent="end" mt="15px">
               <Button type="submit" color="secondary" disabled={loading? true: false} variant="contained">
-               {loading? "loading ...": " Update Profile"}
+               {loading? "loading ...": " Save Changes"}
               </Button>
             </Box>
           </form>

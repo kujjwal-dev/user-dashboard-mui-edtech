@@ -12,8 +12,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <HelmetProvider>
   <BrowserRouter>
     <Suspense>
-      {/* <App /> */}
-      <LoginPage/>
+      <App />
+      {/* <LoginPage/> */}
     </Suspense>
   </BrowserRouter>
 </HelmetProvider>
