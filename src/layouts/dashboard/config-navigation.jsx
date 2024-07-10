@@ -10,12 +10,12 @@ const navConfig = [
   {
     title: 'dashboard',
     path: '/',
-    icon: icon('ic_analytics'),
+    icon: icon('ic_dashboard'),
   },
   {
     title: 'courses',
     path: '/courses',
-    icon: icon('ic_blog'),
+    icon: icon('ic_courses'),
   },
   {
     title: 'user profile',
@@ -23,10 +23,15 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
-    title: 'settings',
-    path: '/settings',
-    icon: icon('ic_blog'),
-  },
+    title: 'progress',
+    path: '/progress',
+    icon: icon('ic_progress'),
+  },{
+    title: 'Content Searches',
+    path: '/contentSearches',
+    icon: icon('ic_search'),
+  }
 ];
 
 export default navConfig;
+

@@ -9,6 +9,8 @@ export const Dashboard = lazy(() => import('../pages/dashboard/Dashboard'));
 export const Courses = lazy(() => import('../pages/courses/Courses'));
 export const Profile = lazy(() => import('../pages/profile/Profile'));
 export const Settings= lazy(() => import('../pages/settings/Settings'));
+export const ContentSearches= lazy(() => import ('../pages/contentSearches/ContentSearches'));
+export const Progress = lazy(() => import('../pages/progress/Progress'))
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +29,8 @@ export default function Router() {
         { path: 'courses', element: <Courses /> },
         { path: 'profile', element: <Profile /> },
         { path: 'settings', element: <Settings /> },
+        {path:'contentSearches', element:<ContentSearches/>},
+        {path: 'progress', element: <Progress/>},
       ],
     },
   ]);

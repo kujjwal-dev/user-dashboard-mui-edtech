@@ -31,7 +31,7 @@ export default function DashboardWebsiteVisits({ title, subheader, chart, ...oth
       y: {
         formatter: (value) => {
           if (typeof value !== 'undefined') {
-            return `${value.toFixed(0)} visits`;
+            return `${value.toFixed(0)} % `;
           }
           return value;
         },

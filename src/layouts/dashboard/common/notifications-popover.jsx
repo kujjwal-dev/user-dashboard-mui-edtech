@@ -26,15 +26,25 @@ import Scrollbar from '../../../components/scrollbar/scrollbar';
 // ----------------------------------------------------------------------
 
 const NOTIFICATIONS = [
-  {
-    id: faker.string.uuid(),
-    title: 'New user created',
-    description: 'Purchased Course',
-    avatar: null,
-    type: 'order_placed',
-    createdAt: set(new Date(), { hours: 10, minutes: 30 }),
-    isUnRead: true,
-  },
+    {
+      id: 'e4a3b5ab-3523-4c8d-bf6f-4835f1cb79c7',
+      title: 'New content added',
+      description: 'Hanuman legends.',
+      avatar: null,
+      type: 'content_added',
+      createdAt: set(new Date(), { hours: 10, minutes: 30 }),
+      isUnRead: true,
+    },
+    {
+      id: '2a1f89ac-8bc5-4a56-aa35-92b4d0db136d',
+      title: 'New Course added',
+      description: 'Basic English',
+      avatar: null,
+      type: 'course_added',
+      createdAt: set(new Date(), { hours: 10, minutes: 30 }),
+      isUnRead: true,
+    }
+  
 ];
 
 export default function NotificationsPopover() {
@@ -116,7 +126,7 @@ export default function NotificationsPopover() {
             ))}
           </List>
 
-          <List
+          {/* <List
             disablePadding
             subheader={
               <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
@@ -127,7 +137,7 @@ export default function NotificationsPopover() {
             {notifications.slice(2, 5).map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
-          </List>
+          </List> */}
         </Scrollbar>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -206,15 +216,15 @@ function renderContent(notification) {
     </Typography>
   );
 
-  if (notification.type === 'order_placed') {
+  if (notification.type === 'course_added') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_package.svg" />,
+      avatar: <img alt={notification.title} src="/assets/icons/notification/ic_courseAdded.svg" />,
       title,
     };
   }
-  if (notification.type === 'order_shipped') {
+  if (notification.type === 'content_added') {
     return {
-      avatar: <img alt={notification.title} src="/assets/icons/ic_notification_shipping.svg" />,
+      avatar: <img alt={notification.title} src="/assets/icons/notification/ic_contentAdded.svg" />,
       title,
     };
   }
